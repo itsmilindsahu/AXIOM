@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pehchaan.me — Consultathon Research Submission</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --navy: #0D1B4B;
+    --teal: #0B8FAC;
+    --teal-light: #E1F7FB;
+    --teal-mid: #5ECDE0;
+    --gold: #E8961A;
+    --gold-light: #FEF3DC;
+    --ink: #1A1A2E;
+    --paper: #F8F6F1;
+    --paper2: #EFEFEA;
+    --muted: #6B7280;
+    --rule: #D4CFC7;
+    --white: #FFFFFF;
+    --danger: #C53030;
+    --warn: #D97706;
+    --success: #2F855A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── GRID PAPER TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(11,143,172,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(11,143,172,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .site-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--teal) 0%, var(--gold) 50%, var(--teal) 100%);
+  }
+
+  /* Grid overlay in header */
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 64px 40px 56px;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .header-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--teal-mid);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .header-title em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .header-subtitle {
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+    max-width: 540px;
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  .header-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.05em;
+  }
+
+  .header-meta span { color: rgba(255,255,255,0.7); }
+
+  .header-badge-cluster {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+
+  .badge-teal { border-color: var(--teal-mid); color: var(--teal-mid); }
+  .badge-gold { border-color: var(--gold); color: var(--gold); }
+  .badge-white { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.6); }
+
+  /* ── STAT ROW ── */
+  .stat-row {
+    background: var(--white);
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    z-index: 1;
+  }
+
+  .stat-row-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .stat-cell {
+    padding: 28px 24px;
+    border-right: 1px solid var(--rule);
+  }
+
+  .stat-cell:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-num.gold { color: var(--gold); }
+  .stat-num.teal { color: var(--teal); }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .stat-source {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--rule);
+    margin-top: 4px;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── SECTION LABELS ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--teal);
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 3vw, 36px);
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .section-desc {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 36px;
+    max-width: 640px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+
+  .card-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  /* ── SECTION BLOCKS ── */
+  .section-block {
+    margin-bottom: 72px;
+  }
+
+  /* ── SEGMENT MATRIX ── */
+  .matrix-wrap {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--rule);
+    background: var(--white);
+  }
+
+  .matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+  }
+
+  .matrix-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper2);
+    color: var(--muted);
+  }
+
+  .matrix-table th.priority-col {
+    background: var(--navy);
+    color: var(--gold);
+  }
+
+  .matrix-table td {
+    padding: 20px 20px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    font-size: 14px;
+  }
+
+  .matrix-table tr:last-child td { border-bottom: none; }
+
+  .matrix-table .row-label {
+    background: var(--paper2);
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--navy);
+    font-family: 'DM Mono', monospace;
+    width: 160px;
+  }
+
+  .cell-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .stars { color: var(--gold); letter-spacing: 1px; font-size: 12px; margin-bottom: 6px; }
+
+  .cell-note { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+
+  .priority-cell {
+    background: #FFFBF0;
+    border-left: 3px solid var(--gold) !important;
+  }
+
+  .priority-cell .cell-tag { color: var(--navy); }
+
+  /* ── CHART GRID ── */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .chart-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  /* ── GAPS LIST ── */
+  .gaps-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .gap-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-left-width: 4px;
+    border-radius: 8px;
+    padding: 20px 22px;
+  }
+
+  .gap-card.high { border-left-color: var(--danger); }
+  .gap-card.med  { border-left-color: var(--warn); }
+  .gap-card.low  { border-left-color: var(--success); }
+
+  .gap-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .gap-card.high .gap-tag { color: var(--danger); }
+  .gap-card.med  .gap-tag { color: var(--warn); }
+  .gap-card.low  .gap-tag { color: var(--success); }
+
+  .gap-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .gap-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  .gap-impact {
+    margin-top: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--teal);
+    padding: 6px 10px;
+    background: var(--teal-light);
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  /* ── GTM SECTION ── */
+  .gtm-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .gtm-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px;
+  }
+
+  .gtm-card.dark {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+  }
+
+  .gtm-card-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+
+  .gtm-card.dark .gtm-card-label { color: var(--teal-mid); }
+
+  .gtm-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .gtm-card.dark .gtm-card-title { color: var(--white); }
+
+  .gtm-list { list-style: none; }
+
+  .gtm-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 13.5px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  .gtm-card.dark .gtm-list li { border-bottom-color: rgba(255,255,255,0.1); }
+
+  .gtm-list li:last-child { border-bottom: none; }
+
+  .gtm-list .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+
+  .gtm-card.dark .gtm-list { color: rgba(255,255,255,0.8); }
+
+  /* Pricing tiers */
+  .pricing-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .price-card {
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  .price-card.free { background: var(--gold-light); border: 1px solid #F0D090; }
+  .price-card.mid  { background: var(--teal-light); border: 1px solid #9FE1CB; }
+  .price-card.top  { background: var(--navy); }
+
+  .price-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .price-card.free .price-amount { color: var(--navy); }
+  .price-card.mid  .price-amount { color: var(--navy); }
+  .price-card.top  .price-amount { color: var(--gold); }
+
+  .price-desc {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .price-card.free .price-desc { color: var(--muted); }
+  .price-card.mid  .price-desc { color: var(--muted); }
+  .price-card.top  .price-desc { color: rgba(255,255,255,0.7); }
+
+  /* ── PERSONA ── */
+  .persona-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+  }
+
+  .persona-card {
+    background: var(--navy);
+    border-radius: 8px;
+    padding: 28px;
+    text-align: center;
+    color: var(--white);
+  }
+
+  .persona-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--white);
+    margin: 0 auto 16px;
+  }
+
+  .persona-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .persona-sub { font-size: 12.5px; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 20px; }
+
+  .persona-tags { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+
+  .persona-tag {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .persona-tag .key { color: var(--gold); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.05em; }
+  .persona-tag .val { color: rgba(255,255,255,0.85); font-size: 12px; }
+
+  /* ── JOURNEY TABLE ── */
+  .journey-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .journey-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    background: var(--paper2);
+    color: var(--muted);
+    text-align: left;
+    border-bottom: 2px solid var(--rule);
+  }
+
+  .journey-table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .journey-table tr:last-child td { border-bottom: none; }
+
+  .journey-table .stage-cell { font-weight: 500; color: var(--navy); width: 110px; }
+  .journey-table .mod-cell { color: var(--teal); width: 120px; font-family: 'DM Mono', monospace; font-size: 11px; }
+  .journey-table .gap-cell { color: var(--danger); font-size: 12.5px; }
+
+  /* ── THE ONE CHANGE ── */
+  .one-change {
+    background: var(--gold);
+    border-radius: 8px;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+    align-items: start;
+    margin-top: 24px;
+  }
+
+  .one-change-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--navy);
+    white-space: nowrap;
+    padding-top: 3px;
+  }
+
+  .one-change-body {
+    font-size: 14.5px;
+    color: var(--navy);
+    line-height: 1.6;
+  }
+
+  .one-change-body strong { font-weight: 600; }
+
+  /* ── ECON STRIP ── */
+  .econ-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .econ-cell {
+    padding: 20px 16px;
+    border-right: 1px solid var(--rule);
+    text-align: center;
+  }
+
+  .econ-cell:last-child { border-right: none; }
+
+  .econ-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--teal);
+    margin-bottom: 4px;
+  }
+
+  .econ-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  /* ── REFERENCES ── */
+  .refs {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .refs ol { padding-left: 20px; }
+
+  .refs a { color: var(--teal); text-decoration: none; }
+
+  .ref-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--teal);
+    font-weight: 500;
+  }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 32px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    position: relative;
+    z-index: 1;
+  }
+
+  .site-footer::before {
+    content: '';
+    display: block;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--teal), var(--gold), var(--teal), transparent);
+    margin-bottom: 24px;
+  }
+
+  /* ── DIVIDER ── */
+  .hr { border: none; border-top: 1px solid var(--rule); margin: 64px 0; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .header-inner { grid-template-columns: 1fr; }
+    .header-badge-cluster { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+    .stat-row-inner { grid-template-columns: 1fr 1fr; }
+    .stat-cell:nth-child(2) { border-right: none; }
+    .chart-grid, .chart-grid-3, .gaps-list, .gtm-grid, .persona-grid, .pricing-row { grid-template-columns: 1fr; }
+    .main { padding: 40px 20px; }
+    .econ-strip { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div>
+      <p class="header-tag">Consultathon · Round 2 Submission · IISER Tirupati</p>
+      <h1 class="header-title">Pehchaan.<em>me</em></h1>
+      <p class="header-subtitle">Module-Segment Fit &amp; Digital Acquisition Strategy — a research-grounded analysis of India's AI career platform for 18M Tier-3 students.</p>
+      <p class="header-meta">
+        Submitted by <span>Milind Sahu</span> &nbsp;·&nbsp; 1st Year BS-MS &nbsp;·&nbsp;
+        Based on <span>7 peer-reviewed sources</span> &amp; <span>30+ minutes hands-on use</span>
+      </p>
+    </div>
+    <div class="header-badge-cluster">
+      <span class="badge badge-teal">&#9679; 7 Research Sources</span>
+      <span class="badge badge-gold">&#9679; Primary User Interview</span>
+      <span class="badge badge-white">&#9679; 30+ min Platform Use</span>
+      <span class="badge badge-white">&#9679; 18 Apr 2026</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ STAT ROW ═══════════════ -->
+<div class="stat-row">
+  <div class="stat-row-inner">
+    <div class="stat-cell">
+      <div class="stat-num">42.6%</div>
+      <div class="stat-label">Indian graduates employable today</div>
+      <div class="stat-source">Mercer-Mettl India Graduate Skill Index 2025 [1]</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num teal">4.2M</div>
+      <div class="stat-label">Target — Tier-3 Engg/MBA students</div>
+      <div class="stat-source">Ken Research India EdTech [3]</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num gold">2.3×</div>
+      <div class="stat-label">Higher completion with regional language</div>
+      <div class="stat-source">Sadavar &amp; Shaikh ICAETM 2024 [6]</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">&gt;10×</div>
+      <div class="stat-label">LTV:CAC on organic acquisition model</div>
+      <div class="stat-source">Pathmonk EdTech Benchmarks 2026 [7]</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main class="main">
+
+  <!-- ── SECTION 01: SEGMENT FIT ── -->
+  <section class="section-block">
+    <p class="section-label">01 · Segment Fit Assessment</p>
+    <h2 class="section-title">Which students does Pehchaan serve best?</h2>
+    <p class="section-desc">A 2×3 product-market fit matrix across institution tier and academic stream, rated on platform relevance, module coverage, language fit, and willingness-to-pay.</p>
+
+    <!-- Charts row -->
+    <div class="chart-grid" style="margin-bottom:24px;">
+      <div class="card">
+        <div class="card-title">Employability gap by stream</div>
+        <div class="card-sub">% graduates employable — India 2025 [1][2]</div>
+        <div style="position:relative;height:220px;">
+          <canvas id="chart-employ" role="img" aria-label="Bar chart showing employability percentages across student streams in India 2025">Employability: Engineering 55%, MBA 61%, BA/BCom 38%, Diploma 29%</canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Segment fit score by cell</div>
+        <div class="card-sub">Composite PMF rating (out of 5) across 6 student cells</div>
+        <div style="position:relative;height:220px;">
+          <canvas id="chart-pmf" role="img" aria-label="Radar chart showing PMF scores for cells A through F">Cell A:4, Cell B:3, Cell C:4, Cell D:3, Cell E:3, Cell F:2</canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Matrix table -->
+    <div class="matrix-wrap">
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Tier 1 — IITs / NITs / IIMs / BITS</th>
+            <th>Tier 2 — Private colleges, metro cities</th>
+            <th class="priority-col">★ Tier 3 PRIORITY — Govt/Pvt, smaller cities</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-label">Engg / MBA</td>
+            <td>
+              <div class="cell-tag" style="color:var(--teal)">Cell A</div>
+              <div class="stars">★★★★☆ 4/5</div>
+              <div class="cell-note">High platform literacy. CV Builder strong fit. Interview module needs case/quant depth.</div>
+            </td>
+            <td>
+              <div class="cell-tag" style="color:var(--teal)">Cell B</div>
+              <div class="stars">★★★☆☆ 3/5</div>
+              <div class="cell-note">Good CV + Tutor fit. Q-bank lacks domain tracks. WTP gap at ₹1,000.</div>
+            </td>
+            <td class="priority-cell">
+              <div class="cell-tag" style="color:var(--navy);">Cell C ★</div>
+              <div class="stars">★★★★☆ 4/5</div>
+              <div class="cell-note">Highest unmet need [1][2]. All modules relevant. Key gap: Hindi UI. Tight WTP at ₹500.</div>
+            </td>
+          </tr>
+          <tr>
+            <td class="row-label">Non-Engg<br>BA / BCom / Diploma</td>
+            <td>
+              <div class="cell-tag" style="color:var(--muted)">Cell D</div>
+              <div class="stars">★★★☆☆ 3/5</div>
+              <div class="cell-note">Ignored by EdTech [6]. CV builder resonates. Needs finance/law Q-bank. WTP ₹600–1,200.</div>
+            </td>
+            <td>
+              <div class="cell-tag" style="color:var(--muted)">Cell E</div>
+              <div class="stars">★★★☆☆ 3/5</div>
+              <div class="cell-note">Moderate fit. Regional language partially present. Generic interview module. WTP ₹400.</div>
+            </td>
+            <td>
+              <div class="cell-tag" style="color:var(--danger)">Cell F</div>
+              <div class="stars" style="color:var(--rule)">★★☆☆☆ 2/5</div>
+              <div class="cell-note">First-gen seekers. Hindi/regional UI critical. Platform English-first. WTP ₹200–400.</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- ── SECTION 02: PRODUCT GAPS ── -->
+  <section class="section-block">
+    <p class="section-label">02 · Product Gaps &amp; Recommended Fixes</p>
+    <h2 class="section-title">Five gaps, ordered by priority and ease</h2>
+    <p class="section-desc">Based on 30+ minutes of hands-on use across all three modules, combined with EdTech market research [3][4][6].</p>
+
+    <!-- Gap completion rate chart -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-title">Projected completion rate lift per fix</div>
+      <div class="card-sub">Estimated impact index (0–100) vs. implementation effort in days</div>
+      <div style="position:relative;height:220px;">
+        <canvas id="chart-gaps" role="img" aria-label="Horizontal bar chart showing impact score vs effort for each recommended product fix">Hindi UI: 95, Q-banks: 72, ATS feedback: 58, Streaks: 45, WhatsApp: 38</canvas>
+      </div>
+    </div>
+
+    <div class="gaps-list">
+      <div class="gap-card high">
+        <div class="gap-tag">High priority · 0–30 days</div>
+        <div class="gap-title">Hindi / Regional-Language-First UI</div>
+        <div class="gap-body">AI Tutor &amp; CV feedback are 100% English. Cell C/F drop-off trigger #1 [6]. Fix: Hindi default on mobile with language toggle at sign-up.</div>
+        <div class="gap-impact">Impact: 2.3× session completion [6]</div>
+      </div>
+      <div class="gap-card high">
+        <div class="gap-tag">High priority · 30–60 days</div>
+        <div class="gap-title">Domain-Specific Interview Q-Banks</div>
+        <div class="gap-body">Generic HR questions regardless of stream. A BCom/Finance student needs very different prep from a CS student. Fix: stream-tagged Q-banks across Finance, Commerce, IT, Core Engineering.</div>
+        <div class="gap-impact">Impact: Primary WTP driver [Ken Research 3]</div>
+      </div>
+      <div class="gap-card med">
+        <div class="gap-tag">Medium priority · 30–45 days</div>
+        <div class="gap-title">CV Feedback — Recruiter's Eye View</div>
+        <div class="gap-body">Builder gives feedback without explaining why, or showing what a recruiter sees. Fix: before/after ATS score toggle showing how the CV ranks in applicant tracking.</div>
+        <div class="gap-impact">Impact: Top freemium→paid driver [Nexdigm 4]</div>
+      </div>
+      <div class="gap-card med">
+        <div class="gap-tag">Medium priority · 45–60 days</div>
+        <div class="gap-title">Progress Dashboard &amp; Streak Mechanics</div>
+        <div class="gap-body">No visible cross-module progress tracker. No habit formation loop. Fix: 7-day free streak before paywall + daily push notification.</div>
+        <div class="gap-impact">Impact: PhysicsWallah retention model proven [4]</div>
+      </div>
+      <div class="gap-card low" style="grid-column: 1 / -1;">
+        <div class="gap-tag">Lower priority · 60–90 days</div>
+        <div class="gap-title">WhatsApp Onboarding Flow for Cell F</div>
+        <div class="gap-body">For first-gen, low-data users a web app is high-friction. Fix: conversational WhatsApp bot (free tier) adapting AI Tutor lessons to drive app sign-ups organically. Duolingo India's WhatsApp pivot boosted DAU by 38% [3].</div>
+        <div class="gap-impact">Impact: Unlocks Cell F · ~14M additional students</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- ── SECTION 03: GTM ── -->
+  <section class="section-block">
+    <p class="section-label">03 · Go-To-Market Strategy</p>
+    <h2 class="section-title">Cell C priority — organic-first, Hindi-first</h2>
+    <p class="section-desc">Target: ~4.2M Tier-3 Engineering &amp; MBA students in Hindi-belt cities (UP, Bihar, Rajasthan, MP). Est. addressable base rising to 18M with Cell F inclusion.</p>
+
+    <div class="gtm-grid">
+      <div class="gtm-card">
+        <div class="gtm-card-label">Channel &amp; Message</div>
+        <div class="gtm-card-title">YouTube Shorts + Instagram Reels in vernacular Hindi</div>
+        <ul class="gtm-list">
+          <li><span class="dot"></span>Tagline: <em>"Apna CV khud banana seekho — 10 minute mein"</em></li>
+          <li><span class="dot"></span>30-sec Reel: student opens pehchaan.me live, builds a CV, AI feedback shown in real time</li>
+          <li><span class="dot"></span>CTA: "Try free at pehchaan.me" — no paid promotion</li>
+          <li><span class="dot"></span>Creator DM outreach only: micro-influencers 10K–100K followers, Hindi EdTech niche</li>
+          <li><span class="dot"></span>Cell C users spend 4.2 hrs/day on short-video platforms [IAMAI 2024, cited 3]</li>
+        </ul>
+      </div>
+      <div class="gtm-card dark">
+        <div class="gtm-card-label">Why it works — proven benchmarks</div>
+        <div class="gtm-card-title">Every comparable has done this exact playbook</div>
+        <ul class="gtm-list">
+          <li><span class="dot" style="background:var(--gold)"></span>Edureka: 60% of users acquired via free YouTube content [4]</li>
+          <li><span class="dot" style="background:var(--gold)"></span>PhysicsWallah: Hindi channel hit 10M subs before any paid media</li>
+          <li><span class="dot" style="background:var(--gold)"></span>Duolingo India Hindi pivot: +38% DAU, 6.2% free-to-paid conversion [3]</li>
+          <li><span class="dot" style="background:var(--gold)"></span>Vedantu organic SEO: 8.5M monthly visitors, 95% organic [4]</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div style="margin-bottom:24px;">
+      <p class="card-title" style="margin-bottom:12px;font-size:14px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;">Pricing design</p>
+      <div class="pricing-row">
+        <div class="price-card free">
+          <div class="price-amount">FREE</div>
+          <div class="price-desc">All 3 modules · 3 uses/month<br>Trust-building tier</div>
+        </div>
+        <div class="price-card mid">
+          <div class="price-amount">₹299 / mo</div>
+          <div class="price-desc">Unlimited CV Builder + AI Tutor<br>Core conversion tier</div>
+        </div>
+        <div class="price-card top">
+          <div class="price-amount">₹699 / mo</div>
+          <div class="price-desc">Full Interview Prep unlocked<br>Premium upsell tier</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Econ strip -->
+    <div class="econ-strip">
+      <div class="econ-cell">
+        <div class="econ-num">₹80–120</div>
+        <div class="econ-label">Target CAC<br>(organic only)</div>
+      </div>
+      <div class="econ-cell">
+        <div class="econ-num">₹1,196</div>
+        <div class="econ-label">LTV<br>(₹299 × 4 mo)</div>
+      </div>
+      <div class="econ-cell">
+        <div class="econ-num">&gt;10×</div>
+        <div class="econ-label">LTV:CAC<br>vs. Simplilearn ₹4,000+</div>
+      </div>
+      <div class="econ-cell">
+        <div class="econ-num">5–8%</div>
+        <div class="econ-label">Freemium→paid<br>EdTech benchmark [7]</div>
+      </div>
+      <div class="econ-cell">
+        <div class="econ-num">4.2M</div>
+        <div class="econ-label">Addressable base<br>Tier-3 Engg/MBA</div>
+      </div>
+    </div>
+
+    <!-- Channel comparison chart -->
+    <div class="card" style="margin-top:24px;">
+      <div class="card-title">CAC comparison — Pehchaan organic vs. EdTech paid</div>
+      <div class="card-sub">Rupee customer acquisition cost; organic model targets ₹80–120 vs. industry average ₹4,000+ [4][7]</div>
+      <div style="position:relative;height:200px;">
+        <canvas id="chart-cac" role="img" aria-label="Bar chart comparing customer acquisition costs across Indian EdTech companies">Pehchaan organic: 100, Vedantu: 1800, Unacademy: 2400, Simplilearn: 4000+</canvas>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- ── SECTION 04: PERSONA ── -->
+  <section class="section-block">
+    <p class="section-label">04 · User Persona &amp; Journey Map</p>
+    <h2 class="section-title">Priya Rajput — Cell C (Tier 3 Engg)</h2>
+    <p class="section-desc">Primary interview conducted 18 April 2026. First-generation college student; father a government schoolteacher; family income ~₹28,000/month.</p>
+
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-avatar">P</div>
+        <div class="persona-name">Priya Rajput</div>
+        <div class="persona-sub">B.Tech Civil Engineering, Final Year<br>Govt. Engineering College, Rewa (MP)<br>First-generation college student</div>
+        <div class="persona-tags">
+          <div class="persona-tag"><span class="key">WTP</span><span class="val">₹300–500/month</span></div>
+          <div class="persona-tag"><span class="key">Device</span><span class="val">Android, 4G</span></div>
+          <div class="persona-tag"><span class="key">Language</span><span class="val">Hindi (primary)</span></div>
+          <div class="persona-tag"><span class="key">Stream</span><span class="val">Core Engineering</span></div>
+          <div class="persona-tag"><span class="key">City tier</span><span class="val">Tier 3 — Rewa</span></div>
+          <div class="persona-tag"><span class="key">Segment</span><span class="val">Cell C ★ Priority</span></div>
+        </div>
+      </div>
+
+      <div>
+        <!-- Pain points -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title">Key pain points — verbatim from interview</div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px;">
+            <div style="padding:12px 16px;background:var(--paper2);border-radius:6px;font-size:13.5px;line-height:1.6;border-left:3px solid var(--danger);">
+              <strong style="color:var(--navy);">No placement cell.</strong> Priya copied a CV from a friend's Word file and submitted to six companies — zero callbacks. Did not know what an "objective statement" meant.
+            </div>
+            <div style="padding:12px 16px;background:var(--paper2);border-radius:6px;font-size:13.5px;line-height:1.6;border-left:3px solid var(--warn);font-style:italic;">
+              "Mujhe answers pata the, lekin bol nahi payi." — Cleared written PSU tests, froze in English interview. Exact deficit Mercer-Mettl [1] identifies as top non-technical gap.
+            </div>
+            <div style="padding:12px 16px;background:var(--paper2);border-radius:6px;font-size:13.5px;line-height:1.6;border-left:3px solid var(--teal);">
+              <strong style="color:var(--navy);">No trusted source.</strong> Watches Josh Talks Hindi &amp; Apna platform but finds them generic. Has never paid for any career product — WTP activates only after outcome proof [2].
+            </div>
+          </div>
+        </div>
+
+        <!-- Journey table -->
+        <div class="card">
+          <div class="card-title">Journey through Pehchaan (18–19 Apr 2026)</div>
+          <table class="journey-table" style="margin-top:14px;">
+            <thead>
+              <tr>
+                <th>Stage</th>
+                <th>Module</th>
+                <th>What works</th>
+                <th>Gap / Drop-off</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="stage-cell">Discovery</td>
+                <td class="mod-cell">—</td>
+                <td>Sees Hindi Reel → clicks link → lands on pehchaan.me on mobile</td>
+                <td class="gap-cell">English-first hero page; doesn't scroll past it</td>
+              </tr>
+              <tr>
+                <td class="stage-cell">Onboarding</td>
+                <td class="mod-cell">CV Builder</td>
+                <td>AI feedback specific, structured, actionable. Genuinely impressed.</td>
+                <td class="gap-cell">All feedback text English-only. Screenshots to translate.</td>
+              </tr>
+              <tr>
+                <td class="stage-cell">Exploration</td>
+                <td class="mod-cell">AI Tutor</td>
+                <td>Bite-sized lessons, good pacing, structured micro-lesson format</td>
+                <td class="gap-cell">100% English. No Hindi lesson. Drops off in 4 minutes.</td>
+              </tr>
+              <tr>
+                <td class="stage-cell">Practice</td>
+                <td class="mod-cell">Interview Prep</td>
+                <td>Avatar interface less stressful than human mock. Clear feedback rubric.</td>
+                <td class="gap-cell">Generic HR questions. No Civil Engg track. No Hindi option.</td>
+              </tr>
+              <tr>
+                <td class="stage-cell">Decision</td>
+                <td class="mod-cell">Paywall</td>
+                <td>—</td>
+                <td class="gap-cell">₹499 prompt. No Hindi. No social proof. Closes app.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- The one change -->
+    <div class="one-change">
+      <div class="one-change-label">THE ONE CHANGE</div>
+      <div class="one-change-body">
+        <strong>Make Hindi the default language for all three modules on mobile, with a language toggle at sign-up.</strong>
+        This single change unlocks Cell C and Cell F simultaneously — an addressable base of ~18 million Tier-3 students.
+        Sadavar &amp; Shaikh [6] document 2.3× higher session completion for regional-language EdTech.
+        Ken Research [3] identifies Hindi-medium delivery as the #1 whitespace in AI-powered career tools.
+        For Priya specifically: if the AI Tutor spoke Hindi, she would use it every day.
+      </div>
+    </div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- ── REFERENCES ── -->
+  <section class="section-block">
+    <p class="section-label">References</p>
+    <div class="refs">
+      <ol>
+        <li><span class="ref-num">[1]</span> Mercer | Mettl. (2025). <em>India's Graduate Skill Index 2025.</em> <a href="https://resources.mettl.com/india-graduate-skill-index-2025">resources.mettl.com</a></li>
+        <li><span class="ref-num">[2]</span> Wheebox. (2024). <em>India Skills Report 2025.</em> In collaboration with CII, Taggd, AICTE &amp; AIU. <a href="https://www.wheebox.com/india-skills-report-2025">wheebox.com</a></li>
+        <li><span class="ref-num">[3]</span> Ken Research. (2024). <em>India EdTech Market Trends, Growth Opportunities &amp; Future Outlook to 2030.</em> <a href="https://www.kenresearch.com/industry-reports/india-edtech-market">kenresearch.com</a></li>
+        <li><span class="ref-num">[4]</span> Nexdigm Market Research. (2024). <em>India Ed-Tech Market Report 2024.</em> <a href="https://www.nexdigm.com/market-research/report-store/india-ed-tech-market-report/">nexdigm.com</a></li>
+        <li><span class="ref-num">[5]</span> IJFMR. (2025). <em>Addressing India's Graduate Employability Crisis Amid Rapid Economic Transformation.</em> Vol. 7(4). DOI: 10.36948/ijfmr.2025.4.51887</li>
+        <li><span class="ref-num">[6]</span> Sadavar, M., &amp; Shaikh, A. (2024). <em>An Evaluation of the Ed-Tech Sector in India: Regional Language Adoption.</em> ITM Web of Conferences – ICAETM 2024. <a href="https://www.itm-conferences.org/articles/itmconf/pdf/2024/11/itmconf_icaetm2024_01024.pdf">itm-conferences.org</a></li>
+        <li><span class="ref-num">[7]</span> Pathmonk Research. (2026). <em>What Is the Average Free-to-Paid Conversion Rate in SaaS and EdTech?</em> <a href="https://pathmonk.com/what-is-the-average-free-to-paid-conversion-rate-saas/">pathmonk.com</a></li>
+      </ol>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="site-footer">
+  Consultathon Round 2 · Pehchaan.me · Milind Sahu · IISER Tirupati · April 2026
+</footer>
+
+<!-- ═══════════════ CHARTS ═══════════════ -->
+<script>
+  const NAVY  = '#0D1B4B';
+  const TEAL  = '#0B8FAC';
+  const TEAL2 = '#5ECDE0';
+  const GOLD  = '#E8961A';
+  const MUTED = '#9CA3AF';
+  const DANGER= '#C53030';
+  const WARN  = '#D97706';
+  const GREEN = '#2F855A';
+  const PAPER = '#F8F6F1';
+
+  Chart.defaults.font.family = "'DM Sans', sans-serif";
+  Chart.defaults.color = '#6B7280';
+
+  // Chart 1 — Employability by stream
+  new Chart(document.getElementById('chart-employ'), {
+    type: 'bar',
+    data: {
+      labels: ['Engineering', 'MBA', 'BA / BCom', 'Diploma'],
+      datasets: [{
+        label: '% Employable',
+        data: [55, 61, 38, 29],
+        backgroundColor: [TEAL2, TEAL, WARN, DANGER],
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ctx.raw + '%' } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 12 } } },
+        y: {
+          min: 0, max: 80,
+          grid: { color: 'rgba(0,0,0,0.05)' },
+          ticks: { callback: v => v + '%', font: { size: 11 } }
+        }
+      }
+    }
+  });
+
+  // Chart 2 — Radar PMF
+  new Chart(document.getElementById('chart-pmf'), {
+    type: 'radar',
+    data: {
+      labels: ['Cell A\n(T1 Engg)', 'Cell B\n(T2 Engg)', 'Cell C ★\n(T3 Engg)', 'Cell D\n(T1 Non)', 'Cell E\n(T2 Non)', 'Cell F\n(T3 Non)'],
+      datasets: [{
+        label: 'PMF Score',
+        data: [4, 3, 4, 3, 3, 2],
+        backgroundColor: 'rgba(11,143,172,0.12)',
+        borderColor: TEAL,
+        borderWidth: 2,
+        pointBackgroundColor: [TEAL, TEAL, GOLD, TEAL, TEAL, DANGER],
+        pointRadius: 5,
+        pointHoverRadius: 7,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          min: 0, max: 5,
+          ticks: { stepSize: 1, font: { size: 10 }, backdropColor: 'transparent' },
+          grid: { color: 'rgba(0,0,0,0.07)' },
+          angleLines: { color: 'rgba(0,0,0,0.07)' },
+          pointLabels: { font: { size: 10 } }
+        }
+      }
+    }
+  });
+
+  // Chart 3 — Gaps horizontal bar
+  new Chart(document.getElementById('chart-gaps'), {
+    type: 'bar',
+    data: {
+      labels: ['WhatsApp (Cell F)', 'Streak Mechanics', 'ATS / CV Feedback', 'Domain Q-Banks', 'Hindi UI'],
+      datasets: [{
+        label: 'Impact Score',
+        data: [38, 45, 58, 72, 95],
+        backgroundColor: [GREEN, GREEN+'99', WARN+'bb', DANGER+'bb', DANGER],
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => 'Impact: ' + ctx.raw + '/100' } }
+      },
+      scales: {
+        x: {
+          min: 0, max: 100,
+          grid: { color: 'rgba(0,0,0,0.05)' },
+          ticks: { font: { size: 11 } }
+        },
+        y: { grid: { display: false }, ticks: { font: { size: 12 } } }
+      }
+    }
+  });
+
+  // Chart 4 — CAC comparison
+  new Chart(document.getElementById('chart-cac'), {
+    type: 'bar',
+    data: {
+      labels: ['Pehchaan\n(organic target)', 'Vedantu', 'Unacademy', 'Simplilearn'],
+      datasets: [{
+        label: 'CAC (₹)',
+        data: [100, 1800, 2400, 4200],
+        backgroundColor: [TEAL, MUTED, MUTED, MUTED],
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => '₹' + ctx.raw.toLocaleString('en-IN') } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 12 }, autoSkip: false } },
+        y: {
+          grid: { color: 'rgba(0,0,0,0.05)' },
+          ticks: { callback: v => '₹' + (v >= 1000 ? (v/1000).toFixed(0) + 'K' : v), font: { size: 11 } }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>
